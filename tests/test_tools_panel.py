@@ -8,12 +8,12 @@ def app():
     return QApplication.instance() or QApplication([])
 
 
-def test_tools_panel_has_5_buttons(app, qtbot):
+def test_tools_panel_has_7_buttons(app, qtbot):
     from src.ui.tools_panel import ToolsPanel
     panel = ToolsPanel()
     qtbot.addWidget(panel)
     buttons = panel.findChildren(QPushButton)
-    assert len(buttons) == 5
+    assert len(buttons) == 7
 
 
 def test_tools_panel_import_signal(app, qtbot):

@@ -5,7 +5,8 @@ from pathlib import Path
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction, QKeySequence
 from PyQt6.QtWidgets import (
-    QMainWindow, QSplitter, QFileDialog, QMessageBox, QWidget, QVBoxLayout
+    QMainWindow, QSplitter, QFileDialog, QMessageBox, QWidget, QVBoxLayout,
+    QDockWidget,
 )
 
 from src.core.config import config
@@ -19,6 +20,9 @@ from src.ui.preview_widget import PreviewWidget
 from src.ui.tools_panel import ToolsPanel
 from src.ui.properties_panel import PropertiesPanel
 from src.ui.timeline_widget import TimelineWidget
+from src.ui.subtitle_editor import SubtitleEditor
+from src.ui.subtitle_preview_overlay import SubtitlePreviewOverlay
+from src.ui.text_editor_panel import TextEditorPanel
 
 
 class MainWindow(QMainWindow):
@@ -41,6 +45,7 @@ class MainWindow(QMainWindow):
 
     def _new_project(self) -> Project:
         tl = Timeline(fps=config.DEFAULT_FPS)
+        tl.add_track(Track(id="titles", name="Titulos", type=TrackType.TEXT))
         tl.add_track(Track(id="v1", name="Video 1", type=TrackType.VIDEO))
         tl.add_track(Track(id="v2", name="Video 2", type=TrackType.VIDEO))
         tl.add_track(Track(id="a1", name="Audio 1", type=TrackType.AUDIO))
@@ -78,6 +83,36 @@ class MainWindow(QMainWindow):
         h_split.setSizes([180, 880, 220])
 
         self.setCentralWidget(h_split)
+
+        # Panel de subtítulos IA (dock flotante)
+        self.subtitle_editor = SubtitleEditor(
+            timeline=self.project.timeline,
+            cmd_stack=self.cmd_stack,
+            timeline_widget=self.timeline_widget,
+        )
+        self._subtitle_dock = QDockWidget("Subtítulos IA", self)
+        self._subtitle_dock.setWidget(self.subtitle_editor)
+        self._subtitle_dock.setMinimumWidth(320)
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self._subtitle_dock)
+        self._subtitle_dock.hide()
+
+        # Panel de texto animado (dock flotante)
+        self.text_editor = TextEditorPanel(
+            timeline=self.project.timeline,
+            cmd_stack=self.cmd_stack,
+            timeline_widget=self.timeline_widget,
+        )
+        self._text_dock = QDockWidget("Texto Animado", self)
+        self._text_dock.setWidget(self.text_editor)
+        self._text_dock.setMinimumWidth(320)
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self._text_dock)
+        self._text_dock.hide()
+
+        # Overlay de subtítulos sobre el preview
+        self.subtitle_overlay = SubtitlePreviewOverlay(self.preview.video_widget)
+        self.subtitle_overlay.resize(self.preview.video_widget.size())
+        self.subtitle_overlay.raise_()
+
         self.statusBar().showMessage("Listo")
 
     def _build_menus(self) -> None:
@@ -128,8 +163,17 @@ class MainWindow(QMainWindow):
 
     def _wire_signals(self) -> None:
         self.tools_panel.importRequested.connect(self.action_import_video)
+        self.tools_panel.subtitleRequested.connect(self._subtitle_dock.show)
+        self.tools_panel.textAnimRequested.connect(self._text_dock.show)
         self.timeline_widget.clipSelected.connect(self._on_clip_selected)
         self.preview.timeChanged.connect(self.timeline_widget.set_playhead)
+        self.preview.timeChanged.connect(self.subtitle_overlay.set_current_time)
+        self.subtitle_editor.segmentsChanged.connect(
+            lambda segs: self.subtitle_overlay.set_segments(
+                segs, self.subtitle_editor.combo_style.currentText()
+            )
+        )
+        self.subtitle_editor.styleChanged.connect(self.subtitle_overlay.set_style)
 
     def _load_stylesheet(self) -> None:
         qss_path = config.STYLES_DIR / "dark_theme.qss"
@@ -144,6 +188,10 @@ class MainWindow(QMainWindow):
         self.timeline_widget.timeline = self.project.timeline
         self.timeline_widget.refresh()
         self.properties_panel.set_clip(None)
+        self.subtitle_editor._timeline = self.project.timeline
+        self.subtitle_editor._cmd_stack = self.cmd_stack
+        self.text_editor._timeline = self.project.timeline
+        self.text_editor._cmd_stack = self.cmd_stack
         self.setWindowTitle("Editor de Video - RevoCL [Untitled]")
 
     def action_open_project(self) -> None:
@@ -212,6 +260,7 @@ class MainWindow(QMainWindow):
         self.timeline_widget.refresh()
         if ext in config.SUPPORTED_VIDEO:
             self.preview.load_video(path)
+            self.subtitle_editor.set_video(path)
         self.statusBar().showMessage(f"Importado: {clip.name}", 3000)
 
     def action_undo(self) -> None:
