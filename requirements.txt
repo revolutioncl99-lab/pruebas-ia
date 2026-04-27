@@ -1,4 +1,14 @@
-ffmpeg-python==0.2.1
+# === Core ===
+ffmpeg-python==0.2.0
 pydantic==2.6.4
-numpy==1.26.4
-pillow==10.2.0
+numpy>=2.3.2
+pillow>=10.3.0
+
+# === UI ===
+PyQt6==6.6.1
+PyQt6-Qt6==6.6.1
+
+# === Testing ===
+pytest==8.1.1
+pytest-qt==4.4.0
+pytest-cov==4.1.0
