@@ -4,11 +4,13 @@ from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel
 
 
 class ToolsPanel(QWidget):
-    """Sidebar izquierdo: import, cut, text, efects, audio."""
+    """Sidebar izquierdo: import, cut, text, subtitles, effects, audio."""
 
     importRequested = pyqtSignal()
     cutRequested = pyqtSignal()
     textRequested = pyqtSignal()
+    subtitleRequested = pyqtSignal()
+    textAnimRequested = pyqtSignal()
     efectsRequested = pyqtSignal()
     audioRequested = pyqtSignal()
 
@@ -27,7 +29,9 @@ class ToolsPanel(QWidget):
             ("📁  Importar", self.importRequested),
             ("✂️  Cortar", self.cutRequested),
             ("T   Texto", self.textRequested),
-            ("✨  Efectos", self.efectsRequested),
+            ("🎙  Subtítulos IA", self.subtitleRequested),
+            ("✨  Texto +", self.textAnimRequested),
+            ("🎨  Efectos", self.efectsRequested),
             ("🎵  Audio", self.audioRequested),
         ]
         for label, signal in buttons:

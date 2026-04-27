@@ -13,7 +13,7 @@ def test_main_window_instantiates(app, qtbot):
     w = MainWindow()
     qtbot.addWidget(w)
     assert w.windowTitle().startswith("Editor de Video")
-    assert len(w.project.timeline.tracks) == 5
+    assert len(w.project.timeline.tracks) == 6
 
 
 def test_main_window_has_panels(app, qtbot):
