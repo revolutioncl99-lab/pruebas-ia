@@ -1,0 +1,108 @@
+/* Dark theme profesional - Editor de Video RevoCL */
+
+QMainWindow, QWidget {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+}
+
+QMenuBar {
+    background-color: #252526;
+    color: #e0e0e0;
+    border-bottom: 1px solid #3a3a3a;
+}
+QMenuBar::item:selected {
+    background-color: #3a3a3a;
+}
+
+QMenu {
+    background-color: #252526;
+    color: #e0e0e0;
+    border: 1px solid #3a3a3a;
+}
+QMenu::item:selected {
+    background-color: #094771;
+}
+
+QToolBar {
+    background-color: #252526;
+    border: none;
+    spacing: 4px;
+    padding: 4px;
+}
+
+QPushButton {
+    background-color: #2d2d30;
+    border: 1px solid #3a3a3a;
+    border-radius: 4px;
+    padding: 6px 12px;
+    color: #e0e0e0;
+}
+QPushButton:hover {
+    background-color: #3a3a3a;
+}
+QPushButton:pressed {
+    background-color: #094771;
+}
+QPushButton:disabled {
+    color: #666;
+    background-color: #252526;
+}
+
+QSplitter::handle {
+    background-color: #3a3a3a;
+}
+
+QDockWidget {
+    color: #e0e0e0;
+    titlebar-close-icon: url(none);
+}
+QDockWidget::title {
+    background-color: #252526;
+    padding: 4px;
+}
+
+QScrollBar:vertical, QScrollBar:horizontal {
+    background: #252526;
+    width: 10px;
+    height: 10px;
+}
+QScrollBar::handle {
+    background: #4a4a4a;
+    border-radius: 4px;
+}
+QScrollBar::handle:hover {
+    background: #5a5a5a;
+}
+
+QGraphicsView {
+    background-color: #181818;
+    border: 1px solid #3a3a3a;
+}
+
+QListWidget, QTreeWidget {
+    background-color: #1e1e1e;
+    border: 1px solid #3a3a3a;
+    color: #e0e0e0;
+}
+QListWidget::item:selected, QTreeWidget::item:selected {
+    background-color: #094771;
+}
+
+QLabel {
+    color: #e0e0e0;
+}
+
+QLineEdit, QTextEdit, QSpinBox, QDoubleSpinBox, QComboBox {
+    background-color: #2d2d30;
+    border: 1px solid #3a3a3a;
+    border-radius: 3px;
+    padding: 4px;
+    color: #e0e0e0;
+}
+
+QStatusBar {
+    background-color: #007acc;
+    color: white;
+}
