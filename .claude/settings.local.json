@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); projects=d.get\\('projects',{}\\); [print\\(k\\) for k in projects.keys\\(\\) if 'n8n' in k.lower\\(\\) or 'mcp' in k.lower\\(\\) or 'Estratega' in k]\")",
+      "Bash(mkdir -p \"C:/Users/Home/.claude/skills\")",
+      "Bash(cp -r \"C:/Estratega Comercial/N8N/n8n-skills/skills/\"* \"C:/Users/Home/.claude/skills/\")"
+    ]
+  }
+}
